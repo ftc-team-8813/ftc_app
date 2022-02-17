@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Robot {
 
     public Drivetrain DriveTrain;
+    public CapStoneDetector capdetector;
 
     public Robot(HardwareMap hardwareMap) {
 
@@ -18,8 +20,11 @@ public class Robot {
 
         Servo dropper = hardwareMap.get(Servo.class, "dropper");
 
-        this.DriveTrain = new Drivetrain(front_left, front_right, back_left, back_right, lift, dropper);
+        DistanceSensor DistanceSensorLeft = hardwareMap.get(DistanceSensor.class, "leftDS");
+        DistanceSensor DistanceSensorRight = hardwareMap.get(DistanceSensor.class, "rightDS");
 
+        this.DriveTrain = new Drivetrain(front_left, front_right, back_left, back_right, lift, dropper);
+        this.capdetector = new CapStoneDetector(DistanceSensorLeft, DistanceSensorRight);
     }
 
 }

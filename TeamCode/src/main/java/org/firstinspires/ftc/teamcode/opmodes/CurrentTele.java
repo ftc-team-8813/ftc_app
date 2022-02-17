@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.hardware.CapStoneDetector;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
@@ -15,12 +16,14 @@ public class CurrentTele extends OpMode {
 
     Robot robot;
     Drivetrain DriveTrain;
+    CapStoneDetector capdetector;
 
     @Override
     public void init() {
 
         robot = new Robot(hardwareMap);
         DriveTrain = robot.DriveTrain;
+        capdetector = robot.capdetector;
 
     }
 
@@ -41,6 +44,13 @@ public class CurrentTele extends OpMode {
 //        DriveTrain.lift_control(dpad_up, dpad_down);
 //        DriveTrain.dropper_control(dpad_right, dpad_left);
 
+//        capdetector.detectedOrNot(robot.DistanceSensorLeft);
+//        capdetector.distanceSensor.detectedOrNot(robot.DistanceSensorRight);
+//        telemetry.addData("Distance Sensor Test", "It works"
+
+        capdetector.CapStoneDetection(capdetector.DistanceSensorRight, capdetector.DistanceSensorLeft);
+
+        telemetry.addData("Capstone Location: ", capdetector.getLocation());
         telemetry.addData("Right Stick X", gamepad1.right_stick_x);
         telemetry.addData("Right Stick Y", gamepad1.right_stick_y);
         telemetry.addData("Left Stick X", gamepad1.left_stick_x);
@@ -49,6 +59,6 @@ public class CurrentTele extends OpMode {
         telemetry.addData("DPad Down", gamepad1.dpad_down);
         telemetry.addData("DPad Right", gamepad1.dpad_right);
         telemetry.addData("DPad Left", gamepad1.dpad_left);
-
+        telemetry.update();
     }
 }
