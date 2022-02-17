@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -9,8 +9,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class testDistanceSensor{
     Telemetry telemetry;
+    DistanceSensor DistanceSensorLeft;
+    DistanceSensor DistanceSensorRight;
 
     public testDistanceSensor(Telemetry telemetry){
+
         this.telemetry = telemetry;
     }
 
