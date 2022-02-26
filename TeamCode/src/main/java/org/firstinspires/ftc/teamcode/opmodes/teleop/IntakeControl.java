@@ -15,11 +15,6 @@ import java.util.Timer;
 public class IntakeControl extends ControlModule {
     private Intake intake;
     private Lift lift;
-    private ControllerMap.AxisEntry ax_right_trigger;
-    private ControllerMap.AxisEntry ax_left_trigger;
-    private ControllerMap.ButtonEntry btn_left_bumper;
-    private ControllerMap.ButtonEntry btn_right_bumper;
-
     private Gamepad gamepad1;
     private Gamepad gamepad2;
 
@@ -39,20 +34,14 @@ public class IntakeControl extends ControlModule {
     }
 
     @Override
-    public void initialize(Robot robot, ControllerMap controllerMap, ControlMgr manager) {
+    public void initialize(Robot robot, Gamepad gamepad1, Gamepad gamepad2, ControlMgr manager) {
         this.intake = robot.intake;
         this.lift = robot.lift;
         this.intake.stop();
-
-        ax_right_trigger = controllerMap.getAxisMap("intake:intake_front", "gamepad1", "right_trigger");
-        ax_left_trigger = controllerMap.getAxisMap("intake:intake_back", "gamepad1", "left_trigger");
-        btn_left_bumper = controllerMap.getButtonMap("intake:outtake_override", "gamepad1", "left_bumper");
-        btn_right_bumper = controllerMap.getButtonMap("lift:deposit", "gamepad2", "right_bumper");
+        this.gamepad1 = gamepad1;
+        this.gamepad2 = gamepad2;
 
         intake.deposit(Status.DEPOSITS.get("carry"));
-
-        gamepad1 = controllerMap.gamepad1;
-        gamepad2 = controllerMap.gamepad2;
     }
 
     @Override
@@ -74,7 +63,7 @@ public class IntakeControl extends ControlModule {
             was_rumbling = false;
         }
 
-        if (ax_right_trigger.get() > 0.5){
+        if (gamepad1.right_trigger > 0.5){
             if (!carrying){
                 side = 1;
             }
@@ -85,7 +74,7 @@ public class IntakeControl extends ControlModule {
             intake.setIntakeFront(0);
         }
 
-        if (ax_left_trigger.get() > 0.5){
+        if (gamepad1.left_trigger > 0.5){
             if (!carrying){
                 side = -1;
             }
@@ -96,13 +85,13 @@ public class IntakeControl extends ControlModule {
             intake.setIntakeBack(0);
         }
 
-        if (btn_left_bumper.get()){
+        if (gamepad1.left_bumper){
             intake.setIntakeFront(-1);
             intake.setIntakeBack(-1);
         }
 
         if (lift.getLiftTargetPos() > 1000) {
-            if (btn_right_bumper.get()) {
+            if (gamepad2.right_bumper) {
                 intake.deposit(Status.DEPOSITS.get("dump"));
                 side = 2;
             } else {
@@ -135,9 +124,5 @@ public class IntakeControl extends ControlModule {
         }
 
         side_was=side;
-
-        telemetry.addData("Freight Distance: ", intake.getFreightDistance());
     }
-
-
 }

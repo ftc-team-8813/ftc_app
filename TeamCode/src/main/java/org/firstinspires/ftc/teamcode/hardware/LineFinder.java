@@ -1,14 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.input.ControllerMap;
-import org.firstinspires.ftc.teamcode.opmodes.teleop.ControlMgr;
-import org.firstinspires.ftc.teamcode.opmodes.teleop.ControlModule;
 import org.firstinspires.ftc.teamcode.util.Status;
-import org.firstinspires.ftc.teamcode.vision.ImageDraw;
 
 public class LineFinder {
     public final ColorSensor line_finder;

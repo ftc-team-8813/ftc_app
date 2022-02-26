@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.input.ControllerMap;
@@ -14,7 +16,7 @@ public abstract class ControlModule
         this.name = name;
     }
     
-    public abstract void initialize(Robot robot, ControllerMap controllerMap, ControlMgr manager);
+    public abstract void initialize(Robot robot, Gamepad gamepad1, Gamepad gamepad2, ControlMgr manager);
     
     public void init_loop(Telemetry telemetry) {}
     

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.Duck;
@@ -8,7 +9,8 @@ import org.firstinspires.ftc.teamcode.input.ControllerMap;
 
 public class DuckControl extends ControlModule{
     private Duck duck;
-    private ControllerMap.AxisEntry ax_right_stick_y;
+    private Gamepad gamepad1;
+    private Gamepad gamepad2;
     private ElapsedTime spinner_speed_timer;
     private double spinner_speed = 0.0;
     private boolean inc_spinner_speed = false;
@@ -19,15 +21,14 @@ public class DuckControl extends ControlModule{
     }
 
     @Override
-    public void initialize(Robot robot, ControllerMap controllerMap, ControlMgr manager) {
+    public void initialize(Robot robot, Gamepad gamepad1, Gamepad gamepad2, ControlMgr manager) {
         this.duck = robot.duck;
-        ax_right_stick_y = controllerMap.getAxisMap("duck:spin", "gamepad2", "right_stick_y");
         spinner_speed_timer = new ElapsedTime();
     }
 
     @Override
     public void update(Telemetry telemetry) {
-        if (ax_right_stick_y.get() > 0.14) {
+        if (gamepad2.right_stick_y > 0.14) {
 
             inc_spinner_speed = spinner_speed_timer.seconds() >= 1.2;
             stop_duck_spin = spinner_speed_timer.seconds() >= 2;
@@ -42,7 +43,7 @@ public class DuckControl extends ControlModule{
             }
 
         }
-        if (ax_right_stick_y.get() < -0.14) {
+        if (gamepad2.right_stick_y < -0.14) {
 
             inc_spinner_speed = spinner_speed_timer.seconds() >= 1.2;
             stop_duck_spin = spinner_speed_timer.seconds() >= 2;
@@ -57,13 +58,12 @@ public class DuckControl extends ControlModule{
             }
         }
 
-        if (ax_right_stick_y.get() <= 0.14 && ax_right_stick_y.get() >= -0.14) {
+        if (gamepad2.right_stick_y <= 0.14 && gamepad2.right_stick_y >= -0.14) {
             spinner_speed_timer.reset();
             spinner_speed = 0.0;
 
         }
 
         duck.spin(spinner_speed);
-        telemetry.addData("Duck Spinner Speed: ", spinner_speed);
     }
 }

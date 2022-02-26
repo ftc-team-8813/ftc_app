@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.util.Status;
 
 import java.lang.Math;
@@ -155,30 +152,6 @@ public class AutoDrive {
 
         drivetrain.move(forward, strafe, turn);
 
-    }
-
-    public void update(Telemetry telemetry) {
-
-        getFieldPos();
-        /*
-        telemetry.addData("encoder FL: ", fl_enc);
-        telemetry.addData("encoder FR: ", fr_enc);
-        telemetry.addData("encoder BL: ", bl_enc);
-        telemetry.addData("encoder BR: ", br_enc);
-         */
-        telemetry.addData("x Error: ", error_x);
-        telemetry.addData("y Error: ", error_y);
-        telemetry.addData("a Error: ", error_a);
-
-        //telemetry.addData("delta x: ", delta_x);
-        //telemetry.addData("delta y: ", delta_y);
-
-        telemetry.addData("x position: ", field_x);
-        telemetry.addData("y position: ", field_y);
-        telemetry.addData("angle: ", heading);
-
-        //telemetry.addData("Server status ", server.getStatus());
-        //telemetry.addData("Loop Time in seconds", loop_time);
     }
 }
 
