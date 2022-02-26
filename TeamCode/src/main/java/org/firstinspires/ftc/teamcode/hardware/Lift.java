@@ -15,7 +15,6 @@ public class Lift {
     private final Servo arm;
     private final DigitalChannel limit_switch;
     private final Servo outrigger;
-    private Logger log = new Logger("Lift");
 
     private boolean lift_reached = true;
 

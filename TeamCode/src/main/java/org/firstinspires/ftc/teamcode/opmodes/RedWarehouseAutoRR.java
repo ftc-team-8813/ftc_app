@@ -1,24 +1,16 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.acmerobotics.roadrunner.drive.Drive;
-import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TranslationalVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
-import org.firstinspires.ftc.teamcode.input.ControllerMap;
 import org.firstinspires.ftc.teamcode.opmodes.auto.AutonomousTemplate;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.util.Logger;
 import org.firstinspires.ftc.teamcode.util.Status;
-import org.firstinspires.ftc.teamcode.util.event.EventBus;
-
-import java.util.Vector;
 
 @Autonomous(name="Red Warehouse Auto RR", group="Reds")
 public class RedWarehouseAutoRR extends LoggingOpMode
@@ -51,8 +43,8 @@ public class RedWarehouseAutoRR extends LoggingOpMode
                 name,
                 this.robot,
                 hardwareMap,
-                new ControllerMap(gamepad1, gamepad2, new EventBus()),
-                telemetry
+                gamepad1,
+                gamepad2
         );
         startPose = new Pose2d(12, 0, Math.toRadians(180));
         drive.setPoseEstimate(startPose);

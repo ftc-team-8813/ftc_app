@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.input.ControllerMap;
@@ -14,14 +16,17 @@ public class ControlMgr
 {
     private List<ControlModule> modules;
     private Robot robot;
-    private ControllerMap controllerMap;
     private Logger log = new Logger("Control Modules");
-    
-    public ControlMgr(Robot robot, ControllerMap controllerMap)
+    private Gamepad gamepad1;
+    private Gamepad gamepad2;
+
+
+    public ControlMgr(Robot robot, Gamepad gamepad1, Gamepad gamepad2)
     {
         modules = new ArrayList<>();
         this.robot = robot;
-        this.controllerMap = controllerMap;
+        this.gamepad1 = gamepad1;
+        this.gamepad2 = gamepad2;
     }
     
     public ControlModule addModule(ControlModule module)
@@ -53,7 +58,7 @@ public class ControlMgr
         for (ControlModule module : modules)
         {
             double start = Time.now();
-            module.initialize(robot, controllerMap, this);
+            module.initialize(robot, gamepad1, gamepad2, this);
             double time = Time.since(start);
             
             log.d("%s: initialized in %.2f ms", module.name, time * 1000.0);

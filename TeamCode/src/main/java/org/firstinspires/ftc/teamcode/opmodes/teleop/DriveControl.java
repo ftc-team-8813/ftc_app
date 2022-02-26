@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -16,22 +17,14 @@ import org.firstinspires.ftc.teamcode.util.Status;
 public class DriveControl extends ControlModule{
     private Drivetrain drivetrain;
     private Lift lift;
-
-
-    private double speed_scalar = 2;
-
-    private ControllerMap.AxisEntry ax_drive_left_x;
-    private ControllerMap.AxisEntry ax_drive_left_y;
-    private ControllerMap.AxisEntry ax_drive_right_x;
-    private ControllerMap.ButtonEntry btn_y;
-    private ControllerMap.ButtonEntry btn_a;
-    private ControllerMap.ButtonEntry btn_x;
-    private ControllerMap.ButtonEntry btn_dpad_down;
     private AutoDrive autoDrive;
     private LineFinder lineFinder;
+    private Gamepad gamepad1;
+    private Gamepad gamepad2;
 
+    private double speed_scalar = 2;
     private double heading_was;
-    private double heading_delta;
+    public double heading_delta;
 
     //private double target_angle=0.0; // robot target heading for correction
     //private double turn_scaling=0.1; //scales the right joystick x value for turn correction
@@ -43,18 +36,12 @@ public class DriveControl extends ControlModule{
 
 
     @Override
-    public void initialize(Robot robot, ControllerMap controllerMap, ControlMgr manager) {
+    public void initialize(Robot robot, Gamepad gamepad1, Gamepad gamepad2, ControlMgr manager) {
         this.drivetrain = robot.drivetrain;
         this.lift = robot.lift;
         this.lineFinder = robot.lineFinder;
-
-        ax_drive_left_x = controllerMap.getAxisMap("drive:left_x", "gamepad1", "left_stick_x");
-        ax_drive_left_y = controllerMap.getAxisMap("drive:right_y", "gamepad1", "left_stick_y");
-        ax_drive_right_x = controllerMap.getAxisMap("drive:right_x", "gamepad1", "right_stick_x");
-        btn_y = controllerMap.getButtonMap("lift:extend_high", "gamepad2", "y");
-        btn_a = controllerMap.getButtonMap("lift:extend_low", "gamepad2", "a");
-        btn_x = controllerMap.getButtonMap("lift:extend_neutral", "gamepad2", "x");
-        btn_dpad_down = controllerMap.getButtonMap("lift:reset", "gamepad2", "dpad_down");
+        this.gamepad1 = gamepad1;
+        this.gamepad2 = gamepad2;
     }
 
 
@@ -77,12 +64,9 @@ public class DriveControl extends ControlModule{
             speed_scalar = 0.8;
         }
 
-        telemetry.addData("Heading Delta: ", heading_delta);
-        teleMove(-ax_drive_left_y.get() * 0.45 * speed_scalar,
-                                     ax_drive_left_x.get() * 0.45 * speed_scalar,
-                                      ax_drive_right_x.get() * 0.45 * speed_scalar);
-        telemetry.addData("Dist Y: ", drivetrain.dist_y.getDistance(DistanceUnit.CM));
-        telemetry.addData("Line Found: ", lineFinder.lineFound());
+        teleMove(-gamepad1.left_stick_y * 0.45 * speed_scalar,
+                                     gamepad1.left_stick_x * 0.45 * speed_scalar,
+                                      gamepad1.right_stick_x * 0.45 * speed_scalar);
     }
 
     public void teleMove(double forward, double strafe, double turn) {
