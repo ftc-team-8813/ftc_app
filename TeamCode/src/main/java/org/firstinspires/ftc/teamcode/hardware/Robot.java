@@ -77,11 +77,11 @@ public class Robot
         BNO055IMU imu_sensor = hardwareMap.get(BNO055IMU.class, "imu");
         DigitalChannel lift_limit = hardwareMap.get(DigitalChannel.class, "lift limit");
         DistanceSensor freight_checker = hardwareMap.get(DistanceSensor.class, "freight checker");
-        DistanceSensor left = hardwareMap.get(DistanceSensor.class, "cap left");
-        DistanceSensor right = hardwareMap.get(DistanceSensor.class, "cap right");
+        DistanceSensor cap_left = hardwareMap.get(DistanceSensor.class, "cap left");
+        DistanceSensor cap_right = hardwareMap.get(DistanceSensor.class, "cap right");
 
         // Sub-Assemblies
-        this.capDetector = new SensorCapstoneDetector(left, right);
+        this.capDetector = new SensorCapstoneDetector(cap_left, cap_right);
         this.drivetrain = new Drivetrain(front_left, front_right, back_left, back_right, imu_sensor);
         this.lift = new Lift(lift1, lift2, pivot, lift_limit);
         this.intake = new Intake(intake, freight_checker, claw, left_intake, right_intake);

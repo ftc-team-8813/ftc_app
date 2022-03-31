@@ -6,13 +6,19 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 @Autonomous(name = "Auto")
 public class Auto extends LoggingOpMode{
 
-    private Robot robot;
+    public Robot robot;
+
+    @Override
+    public void init() {
+        super.init();
+        robot = Robot.initialize(hardwareMap);
+    }
 
     @Override
     public void loop() {
-        robot.capDetector.blueCapstoneDetection();
-        robot.capDetector.getMiddleDistance(telemetry);
-        robot.capDetector.getRightDistance(telemetry);
+        robot.capDetector.redCapstoneDetection();
+        telemetry.addData("Right Cap", robot.capDetector.getRightDistance());
+        telemetry.addData("Middle Cap", robot.capDetector.getMiddleDistance());
+        telemetry.update();
     }
 }
-

@@ -42,14 +42,12 @@ public class SensorCapstoneDetector {
         }
     }
 
-    public void getRightDistance(Telemetry telemetry){
-        telemetry.addData("Right Sensor", right.getDistance(DistanceUnit.CM));
-        telemetry.update();
+    public double getRightDistance(){
+        return right.getDistance(DistanceUnit.CM);
     }
 
-    public void getMiddleDistance(Telemetry telemetry){
-        telemetry.addData("Middle/Left Sensor", middle.getDistance(DistanceUnit.CM));
-        telemetry.update();
+    public double getMiddleDistance(){
+        return middle.getDistance(DistanceUnit.CM);
     }
 }
 
