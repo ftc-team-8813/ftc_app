@@ -12,13 +12,13 @@ public class Auto extends LoggingOpMode{
     public void init() {
         super.init();
         robot = Robot.initialize(hardwareMap);
+
     }
 
     @Override
     public void loop() {
-        robot.capDetector.redCapstoneDetection();
-        telemetry.addData("Right Cap", robot.capDetector.getRightDistance());
-        telemetry.addData("Middle Cap", robot.capDetector.getMiddleDistance());
+        robot.capDetector.capstoneDetection(telemetry);
+        telemetry.addData("Loop Number", robot.capDetector.getLoopCycleNum());
         telemetry.update();
     }
 }

@@ -1,53 +1,56 @@
 package org.firstinspires.ftc.teamcode.hardware;
+
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import java.util.Arrays;
 
 public class SensorCapstoneDetector {
 
     private int location = 0;
-    private DistanceSensor middle;
+    private DistanceSensor left;
     private DistanceSensor right;
+    private double[] rightSensArray;
+    private double[] leftSensArray;
+    private int loopCycleNum;
 
-    public SensorCapstoneDetector(DistanceSensor middle, DistanceSensor right){
-        this.middle = middle;
+
+    public SensorCapstoneDetector(DistanceSensor left, DistanceSensor right){
+        this.left = left;
         this.right = right;
+        rightSensArray = new double[300];
+        leftSensArray = new double[300];
+        loopCycleNum = 0;
     }
 
-    public int getLocation() {
-        return location;
+    public int getLoopCycleNum(){
+        return loopCycleNum;
     }
 
-    public void setLocation(int location) {
-        this.location = location;
-    }
-
-    public void blueCapstoneDetection(){
-        if((right.getDistance(DistanceUnit.CM) >= 50) && (right.getDistance(DistanceUnit.CM) <= 70)){
-            setLocation(3);
-        }else if((middle.getDistance(DistanceUnit.CM) >= 50) && (middle.getDistance(DistanceUnit.CM) <= 70)){
-            setLocation(2);
-        }else{
-            setLocation(1);
+    public void finalLocation(double leftAverage, double rightAverage){
+        if(Math.abs((leftAverage-rightAverage)) > 200)
+            if(leftAverage > rightAverage){
+                location = 2;
+            }else{
+                location = 3;
+            }
+        else{
+            location = 1;
         }
     }
 
-    public void redCapstoneDetection(){
-        if((right.getDistance(DistanceUnit.CM) >= 50) && (right.getDistance(DistanceUnit.CM) <= 70)){
-            setLocation(2);
-        }else if((middle.getDistance(DistanceUnit.CM) >= 50) && (middle.getDistance(DistanceUnit.CM) <= 70)){
-            setLocation(1);
-        }else{
-            setLocation(3);
+    public void capstoneDetection(Telemetry telemetry){
+        if(loopCycleNum < 300){
+            leftSensArray[loopCycleNum] = left.getDistance(DistanceUnit.CM);
         }
-    }
+        if(loopCycleNum < 300){
+            rightSensArray[loopCycleNum] = right.getDistance(DistanceUnit.CM);
+        }
 
-    public double getRightDistance(){
-        return right.getDistance(DistanceUnit.CM);
-    }
-
-    public double getMiddleDistance(){
-        return middle.getDistance(DistanceUnit.CM);
+        if(loopCycleNum > 300){
+            finalLocation(Arrays.stream(rightSensArray).sum()/rightSensArray.length, Arrays.stream(leftSensArray).sum()/leftSensArray.length);
+            telemetry.addData("Location", location);
+        }
+        loopCycleNum++; 
     }
 }
-
