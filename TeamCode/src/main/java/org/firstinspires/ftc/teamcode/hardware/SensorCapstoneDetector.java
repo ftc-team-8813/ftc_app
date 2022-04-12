@@ -23,11 +23,10 @@ public class SensorCapstoneDetector {
         loopCycleNum = 0;
     }
 
-    public int getLoopCycleNum(){
-        return loopCycleNum;
-    }
+    public int finalLocation(){
+        double leftAverage = Arrays.stream(leftSensArray).sum()/leftSensArray.length;
+        double rightAverage = Arrays.stream(rightSensArray).sum()/rightSensArray.length;
 
-    public void finalLocation(double leftAverage, double rightAverage){
         if(Math.abs((leftAverage-rightAverage)) > 200)
             if(leftAverage > rightAverage){
                 location = 2;
@@ -37,19 +36,18 @@ public class SensorCapstoneDetector {
         else{
             location = 1;
         }
+        return location;
     }
 
     public void capstoneDetection(Telemetry telemetry){
         if(loopCycleNum < 300){
             leftSensArray[loopCycleNum] = left.getDistance(DistanceUnit.CM);
-        }
-        if(loopCycleNum < 300){
             rightSensArray[loopCycleNum] = right.getDistance(DistanceUnit.CM);
         }
 
         if(loopCycleNum > 300){
-            finalLocation(Arrays.stream(rightSensArray).sum()/rightSensArray.length, Arrays.stream(leftSensArray).sum()/leftSensArray.length);
-            telemetry.addData("Location", location);
+            finalLocation();
+            loopCycleNum = 0;
         }
         loopCycleNum++; 
     }
