@@ -15,7 +15,9 @@ public class DriveControl extends ControlModule{
     private ControllerMap.ButtonEntry right_bumper;
 
     private double HEADING_CORRECTION_kP;
-    private double HEADING_CORRECTION_TARGET_BASED;
+    private double HEADING_CORRECTION_kD;
+    private double SENSITIVITY;
+    private double past_error;
     private double past_heading = 0;
     private double summed_heading_error;
     private boolean endgame = false;
@@ -38,7 +40,8 @@ public class DriveControl extends ControlModule{
         right_bumper = controllerMap.getButtonMap("endgame", "gamepad1", "right_bumper");
 
         HEADING_CORRECTION_kP = Storage.getJsonValue("heading_correction_kp");
-        HEADING_CORRECTION_TARGET_BASED = Storage.getJsonValue("heading_correction_target_based");
+        HEADING_CORRECTION_kD = Storage.getJsonValue("heading_correction_kd");
+        SENSITIVITY = Storage.getJsonValue("sensitivity");
     }
 
 
@@ -50,44 +53,29 @@ public class DriveControl extends ControlModule{
         }
 
         if (!endgame) {
-            hold_target_heading();
+            drivetrain.move(-ax_drive_left_y.get(),
+                            ax_drive_left_x.get(),
+                            ax_drive_right_x.get() * 0.5,
+                            1);
         }
 
-        telemetry.addData("Heading Correction kP: ", HEADING_CORRECTION_kP);
         telemetry.addData("Heading: ", drivetrain.getHeading());
+        telemetry.addData("Target Heading: ", target_heading);
         telemetry.addData("Angular Velocity: ", drivetrain.getAngularVelocity());
-    }
-
-    /**
-     * Decreases the power of the faster side
-     * Faster side will be opposite the direction of rotation
-     */
-    public void telemove(){
-        double curr_heading = drivetrain.getHeading();
-        double heading_error = curr_heading - past_heading;
-        summed_heading_error += heading_error;
-        if (Math.abs(ax_drive_right_x.get()) > 0.05) heading_error = 0;
-
-        drivetrain.move(-ax_drive_left_y.get(),
-                        ax_drive_left_x.get(),
-                        ax_drive_right_x.get() + (heading_error * HEADING_CORRECTION_kP));
-
-        past_heading = curr_heading;
+        telemetry.addData("Current Distance: ", drivetrain.getDistance());
     }
 
     public void hold_target_heading(){
-        double curr_heading = target_heading;
-        double turn_power;
-        if (Math.abs(ax_drive_right_x.get()) > 0.05){
-            target_heading = curr_heading;
-            turn_power = ax_drive_right_x.get();
-        } else {
-            double error = target_heading - curr_heading;
-            turn_power = error * HEADING_CORRECTION_TARGET_BASED;
-        }
+        double curr_heading = drivetrain.getHeading();
+        target_heading += -ax_drive_right_x.get() * SENSITIVITY;
+
+        double error = target_heading - curr_heading;
+        double error_diff = error - past_error;
+        double turn_power = -error * HEADING_CORRECTION_kP + error_diff * HEADING_CORRECTION_kD;
+
         drivetrain.move(-ax_drive_left_y.get(),
                         ax_drive_left_x.get(),
-                        turn_power);
+                        turn_power, 1);
     }
 
     @Override

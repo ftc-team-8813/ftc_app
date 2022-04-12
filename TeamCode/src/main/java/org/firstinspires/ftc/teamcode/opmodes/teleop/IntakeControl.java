@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.Intake;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
@@ -21,6 +22,7 @@ public class IntakeControl extends ControlModule{
     private double HOLD_TIME;
     private double CLOSE_CLAW_FREIGHT;
     private double OPEN_CLAW;
+    private double PITSTOP;
     private boolean holding_freight;
 
     public IntakeControl(String name) {
@@ -40,6 +42,7 @@ public class IntakeControl extends ControlModule{
         HOLD_TIME = Storage.getJsonValue("hold_time");
         CLOSE_CLAW_FREIGHT = Storage.getJsonValue("close_claw_freight");
         OPEN_CLAW = Storage.getJsonValue("open_claw");
+        PITSTOP = Storage.getJsonValue("pitstop");
     }
 
     @Override
@@ -49,18 +52,19 @@ public class IntakeControl extends ControlModule{
 
     @Override
     public void update(Telemetry telemetry) {
-        // Starts timer for moving claw
-        if (lift.getLiftPosition() < 10000 && intake.freightDetected()) {
-            intake.deposit(CLOSE_CLAW_FREIGHT);
-        } else if ((lift.getLiftPosition() >= 10000 && right_bumper.get()) || intake.getPower() > 0.1){
-            intake.deposit(OPEN_CLAW);
-        }
-
-        // Controls whether driver can intake or outtake
         if (intake.freightDetected()){
-            intake.setPower(-right_trigger.get() * 0.35);
+            intake.setPower(-left_trigger.get() * 0.3);
         } else {
             intake.setPower(right_trigger.get() - left_trigger.get());
         }
+
+        // Starts timer for moving claw
+        if ((right_bumper.get() && lift.getLiftPosition() > PITSTOP) || intake.getPower() > 0){
+            intake.deposit(OPEN_CLAW);
+        } else {
+            intake.deposit(CLOSE_CLAW_FREIGHT);
+        }
+
+        telemetry.addData("Freight Distance: ", intake.freight_checker.getDistance(DistanceUnit.CM));
     }
 }

@@ -46,8 +46,6 @@ public class ServerControl extends ControlModule{
 //            buf.flip();
 //            resp.respond(buf);
 //        });
-
-
         server.startServer();
     }
 
