@@ -98,6 +98,7 @@ public class BlueAuto extends LoggingOpMode{
     @Override
     public void start() {
         super.start();
+        cap_detector.setOpMode("Blue");
         cap_location = cap_detector.final_location();
         if (cap_location == 1){
             AUTO_TURN = -Storage.getJsonValue("auto_low_turn");
@@ -143,7 +144,7 @@ public class BlueAuto extends LoggingOpMode{
                         if (lift.liftReached()) {
                             lift_timer.reset();
                             intake.deposit(OPEN_CLAW);
-                            drivetrain.autoMove(-100,0,10);
+                            drivetrain.autoMove(-100,0,-10);
                             lift_id += 1;
                         }
                         break;
@@ -169,10 +170,10 @@ public class BlueAuto extends LoggingOpMode{
                 if (lift_id == 12) main_id += 1;
                 break;
             case 3:
-                drivetrain.autoMove(-200, -150, -43);
+                drivetrain.autoMove(-200, -150, 43);
                 break;
             case 4:
-                drivetrain.autoMove(-110, -780,0);
+                drivetrain.autoMove(-90, -670,0);
                 break;
             case 5:
                 duck_timer.reset();
@@ -188,13 +189,13 @@ public class BlueAuto extends LoggingOpMode{
                 drivetrain.autoMove(400, 0,0);
                 break;
             case 9:
-                drivetrain.autoMove(0,0,60);
+                drivetrain.autoMove(0,0,-60);
                 break;
             case 10:
                 drivetrain.autoMove(500, -200,0);
                 break;
             case 11:
-                drivetrain.autoMove(0,725,-25);
+                drivetrain.autoMove(0,725,25);
                 intake.deposit(CLOSE_CLAW_DUCK);
                 intake.setPower(0);
                 break;
@@ -241,7 +242,7 @@ public class BlueAuto extends LoggingOpMode{
                 drivetrain.autoMove(-850, -550, 0);
                 break;
             case 14:
-                drivetrain.autoMove(-200, 250, 20);
+                drivetrain.autoMove(-200, 250, -20);
         }
 
         lift.update();

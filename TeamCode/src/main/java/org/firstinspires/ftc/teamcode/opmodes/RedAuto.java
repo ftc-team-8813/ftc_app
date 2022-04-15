@@ -100,6 +100,7 @@ public class RedAuto extends LoggingOpMode{
     @Override
     public void start() {
         super.start();
+        cap_detector.setOpMode("Red");
         cap_location = cap_detector.final_location();
         if (cap_location == 1){
             AUTO_TURN = Storage.getJsonValue("auto_low_turn");
