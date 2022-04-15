@@ -35,12 +35,22 @@ public class CapstoneDetector {
         else{
             location = 1;
         }
+        if(Math.abs((leftAverage-rightAverage)) > 200)
+            if(leftAverage > rightAverage){
+                location = 3;
+            }else{
+                location = 2;
+            }
+        else{
+            location = 1;
+        }
+
         return location;
     }
 
     public boolean detect_capstone(){
-        leftSensArray[loopCycleNum] = left.getDistance(DistanceUnit.CM);
-        rightSensArray[loopCycleNum] = right.getDistance(DistanceUnit.CM);
+        leftSensArray[loopCycleNum] = getLeftDistance();
+        rightSensArray[loopCycleNum] = getRightDistance();
 
         if(loopCycleNum < 300){
             loopCycleNum = 0;
@@ -48,5 +58,13 @@ public class CapstoneDetector {
         }
         loopCycleNum++;
         return false;
+    }
+
+    public double getLeftDistance(){
+        return left.getDistance(DistanceUnit.CM);
+    }
+
+    public double getRightDistance(){
+        return right.getDistance(DistanceUnit.CM);
     }
 }
