@@ -32,10 +32,11 @@ public class BlueAuto extends LoggingOpMode{
     private ElapsedTime duck_timer;
 
     private boolean lift_reset;
-    private boolean cap_sampled;
+    private boolean cap_sampled = false;
     private boolean spinning = false;
 
     private double PITSTOP;
+    private double MAX_HEIGHT;
     private double AUTO_RAISE;
     private double AUTO_ROTATE;
     private double AUTO_TURN;
@@ -62,6 +63,7 @@ public class BlueAuto extends LoggingOpMode{
         cap_detector = robot.cap_detector;
 
         PITSTOP = Storage.getJsonValue("pitstop");
+        MAX_HEIGHT = Storage.getJsonValue("max_height");
         AUTO_RAISE = Storage.getJsonValue("auto_high_raise");
         AUTO_ROTATE = Storage.getJsonValue("auto_high_rotate");
         AUTO_TURN = Storage.getJsonValue("auto_high_turn");
@@ -83,12 +85,16 @@ public class BlueAuto extends LoggingOpMode{
     @Override
     public void init_loop() {
         super.init_loop();
-        if (lift.resetLift()){
-            lift_reset = true;
+        if (lift.getPivotReset()){
+            lift.resetPivot();
+        } else {
+            lift.resetLift();
         }
+
         if (cap_detector.detect_capstone()){
             cap_sampled = true;
         }
+
         if (lift_reset && cap_sampled){
             telemetry.addData("Finished Initialization", "");
             telemetry.update();
@@ -100,6 +106,9 @@ public class BlueAuto extends LoggingOpMode{
         super.start();
         cap_detector.setOpMode("Blue");
         cap_location = cap_detector.final_location();
+        if (cap_sampled = false){
+            cap_location = 3;
+        }
         if (cap_location == 1){
             AUTO_TURN = -Storage.getJsonValue("auto_low_turn");
             AUTO_RAISE = Storage.getJsonValue("auto_low_raise");
@@ -124,22 +133,27 @@ public class BlueAuto extends LoggingOpMode{
     public void loop() {
         switch (main_id) {
             case 0:
-                drivetrain.autoMove(-405,100,0);
+                drivetrain.autoMove(-445,150,0);
                 break;
             case 1:
                 drivetrain.autoMove(0,0, AUTO_TURN);
+                drivetrain.autoSpeed(0.1,0.45);
                 break;
             case 2:
                 switch (lift_id){
                     case 0:
-                        lift.raise(PITSTOP);
+                        lift.raise(MAX_HEIGHT - 500);
                         if (lift.liftReached()) lift_id += 1;
                         break;
                     case 1:
+                        lift.raise(PITSTOP + 10000);
+                        if (lift.liftReached()) lift_id += 1;
+                        break;
+                    case 2:
                         lift.rotate(-AUTO_ROTATE);
                         if (lift.pivotReached()) lift_id += 1;
                         break;
-                    case 2:
+                    case 3:
                         lift.raise(AUTO_RAISE);
                         if (lift.liftReached()) {
                             lift_timer.reset();
@@ -148,32 +162,33 @@ public class BlueAuto extends LoggingOpMode{
                             lift_id += 1;
                         }
                         break;
-                    case 3:
+                    case 4:
                         if (lift_timer.seconds() > HOLD_TIME) lift_id += 1;
                         break;
-                    case 4:
+                    case 5:
                         lift.raise(PITSTOP);
                         if (lift.liftReached()) lift_id += 1;
                         break;
-                    case 5:
+                    case 6:
                         lift.rotate(0);
                         if (lift.pivotReached()) lift_id += 1;
                         break;
-                    case 6:
+                    case 7:
                         lift.raise(0);
                         if (lift.liftReached()) lift_id += 1;
                         break;
-                    case 7:
-                        lift_id = 12;
+                    case 8:
+                        lift_id = -1;
+                        drivetrain.autoSpeed(0.55,0.45);
                         break;
                 }
-                if (lift_id == 12) main_id += 1;
+                if (lift_id == -1) main_id += 1;
                 break;
             case 3:
-                drivetrain.autoMove(-200, -150, 43);
+                drivetrain.autoMove(-175, -150, 43);
                 break;
             case 4:
-                drivetrain.autoMove(-90, -670,0);
+                drivetrain.autoMove(-70, -640,0);
                 break;
             case 5:
                 duck_timer.reset();
@@ -182,35 +197,38 @@ public class BlueAuto extends LoggingOpMode{
                 duck_spin();
                 break;
             case 7:
-                drivetrain.autoMove(-150, 100,0);
+                drivetrain.autoMove(-100, 100,0);
                 intake.setPower(.7);
                 break;
             case 8:
-                drivetrain.autoMove(400, 0,0);
+                drivetrain.autoMove(375, 75,0);
+                drivetrain.autoSpeed(.45,.3);
                 break;
             case 9:
                 drivetrain.autoMove(0,0,-60);
                 break;
             case 10:
-                drivetrain.autoMove(500, -200,0);
+                drivetrain.autoSpeed(.5,.45);
+                drivetrain.autoMove(500, -350,0);
                 break;
             case 11:
-                drivetrain.autoMove(0,725,25);
+                drivetrain.autoMove(50,675,27);
                 intake.deposit(CLOSE_CLAW_DUCK);
                 intake.setPower(0);
+                lift_id = 0;
                 break;
             case 12:
                 switch (lift_id){
-                    case 12:
+                    case 0:
                         lift.raise(PITSTOP);
                         if (lift.liftReached()) lift_id = 1;
                         break;
                     case 1:
-                        lift.rotate(59);
+                        lift.rotate(54);
                         if (lift.pivotReached()) lift_id += 1;
                         break;
                     case 2:
-                        lift.raise(61000);
+                        lift.raise(60000);
                         if (lift.liftReached()) {
                             lift_timer.reset();
                             intake.deposit(OPEN_CLAW);
@@ -239,10 +257,10 @@ public class BlueAuto extends LoggingOpMode{
                 }
                 break;
             case 13:
-                drivetrain.autoMove(-850, -550, 0);
+                drivetrain.autoMove(-700, -450, 0);
                 break;
             case 14:
-                drivetrain.autoMove(-200, 250, -20);
+                drivetrain.autoMove(-570, 600, -20);
         }
 
         lift.update();
@@ -266,7 +284,7 @@ public class BlueAuto extends LoggingOpMode{
     }
 
     public void duck_spin() {
-        duck.spin(-(duck_timer.seconds() / 10));
+        duck.spin((duck_timer.seconds() / 10));
         spinning = true;
     }
 
