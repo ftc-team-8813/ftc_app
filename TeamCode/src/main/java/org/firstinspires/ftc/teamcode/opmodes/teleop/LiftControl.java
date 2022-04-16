@@ -29,7 +29,7 @@ public class LiftControl extends ControlModule {
     private double preset_rotate;
     private double preset_raise;
     private int preset_side = 1;
-    private boolean far = false;
+    private boolean far = true;
     private boolean can_pre_raise = false;
 
     private double PITSTOP;
@@ -182,7 +182,7 @@ public class LiftControl extends ControlModule {
         }
 
         if (left_bumper.edge() == -1) { //falling edge keeps it from changing every loop cycle while the button is down
-            far = !far;
+//            far = !far;
         }
 
         if (intake.freightDetected() && lift.getLiftPosition() < PITSTOP && can_pre_raise){

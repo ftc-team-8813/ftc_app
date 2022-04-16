@@ -35,6 +35,13 @@
   "auto_high_raise": 63000,
   "auto_high_rotate": 59,
   "auto_high_turn": 57.5,
+  "low_raise_near": 33000,
+  "low_rotate_near": 78.8,
+  "mid_raise_near": 0.0,
+  "mid_rotate_near": 0.0,
+  "high_raise_near": 0.0,
+  "high_rotate_near": 0.0,
+
 
   "turn_limit": 80,
   "degrees_per_tick": 0.0279,

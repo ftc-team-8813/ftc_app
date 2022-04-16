@@ -85,17 +85,13 @@ public class BlueAuto extends LoggingOpMode{
     @Override
     public void init_loop() {
         super.init_loop();
-        if (lift.getPivotReset()){
-            lift.resetPivot();
-        } else {
-            lift.resetLift();
-        }
+        lift.resetLift();
 
         if (cap_detector.detect_capstone()){
             cap_sampled = true;
         }
 
-        if (lift_reset && cap_sampled){
+        if (lift.getPivotReset() && cap_sampled){
             telemetry.addData("Finished Initialization", "");
             telemetry.update();
         }
