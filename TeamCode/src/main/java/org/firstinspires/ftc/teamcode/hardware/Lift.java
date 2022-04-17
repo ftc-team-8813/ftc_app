@@ -175,8 +175,6 @@ public class Lift {
         double pivot_integral = pivot_summed_error * PIVOT_KI;
         double pivot_derivative = (pivot_error - pivot_last_error) / LoopTimer.getLoopTime() * PIVOT_KD;
 
-        //pivot_power = (pivot_proportional + pivot_integral) * 0.5;
-
         pivot_power = Range.clip(pivot_proportional + pivot_integral + pivot_derivative, -1, 1.0);
 
         pivoter.setPower(pivot_power);

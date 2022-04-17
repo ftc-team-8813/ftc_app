@@ -129,37 +129,40 @@ public class BlueAuto extends LoggingOpMode{
     public void loop() {
         switch (main_id) {
             case 0:
-                drivetrain.autoMove(-445,150,0);
+                drivetrain.autoSpeed(0.3,0.45);
+                main_id += 1;
                 break;
             case 1:
-                drivetrain.autoMove(0,0, AUTO_TURN);
-                drivetrain.autoSpeed(0.1,0.45);
+                drivetrain.autoMove(-1500,100,0);
                 break;
             case 2:
                 switch (lift_id){
                     case 0:
-                        lift.raise(MAX_HEIGHT - 500);
-                        if (lift.liftReached()) lift_id += 1;
-                        break;
-                    case 1:
-                        lift.raise(PITSTOP + 10000);
-                        if (lift.liftReached()) lift_id += 1;
+//                        lift.raise(MAX_HEIGHT - 500);
+//                        if (lift.liftReached()) lift_id += 1;
+//                        break;
+//                    case 1:
+                        lift.raise(AUTO_RAISE);
+                        if (lift.liftReached()) lift_id += 2;
                         break;
                     case 2:
                         lift.rotate(-AUTO_ROTATE);
                         if (lift.pivotReached()) lift_id += 1;
                         break;
                     case 3:
-                        lift.raise(AUTO_RAISE);
-                        if (lift.liftReached()) {
-                            lift_timer.reset();
-                            intake.deposit(OPEN_CLAW);
-                            drivetrain.autoMove(-100,0,-10);
-                            lift_id += 1;
-                        }
+//                        lift.raise(AUTO_RAISE);
+//                        if (lift.liftReached()) {
+//                            lift_timer.reset();
+//                            intake.deposit(OPEN_CLAW);
+////                            drivetrain.autoMove(-100,0,0);
+//                            lift_id += 1;
+//                        }
+                        lift_timer.reset();
+                        intake.deposit(OPEN_CLAW);
+                        lift_id += 1;
                         break;
                     case 4:
-                        if (lift_timer.seconds() > HOLD_TIME) lift_id += 1;
+                        if (lift_timer.seconds() > HOLD_TIME + 0.5) lift_id += 1;
                         break;
                     case 5:
                         lift.raise(PITSTOP);
@@ -175,64 +178,61 @@ public class BlueAuto extends LoggingOpMode{
                         break;
                     case 8:
                         lift_id = -1;
-                        drivetrain.autoSpeed(0.55,0.45);
+                        drivetrain.autoSpeed(0.37,0.45);
                         break;
                 }
                 if (lift_id == -1) main_id += 1;
                 break;
             case 3:
-                drivetrain.autoMove(-175, -150, 43);
+                drivetrain.autoMove(1400, -925, 0);
                 break;
             case 4:
-                drivetrain.autoMove(-70, -640,0);
-                break;
-            case 5:
                 duck_timer.reset();
                 main_id += 1;
-            case 6:
+            case 5:
                 duck_spin();
                 break;
-            case 7:
-                drivetrain.autoMove(-100, 100,0);
+            case 6:
+                drivetrain.autoMove(-200, 100,-24);
                 intake.setPower(.7);
                 break;
-            case 8:
-                drivetrain.autoMove(375, 75,0);
+            case 7:
+                drivetrain.autoMove(425, 125,0);
                 drivetrain.autoSpeed(.45,.3);
                 break;
-            case 9:
+            case 8:
                 drivetrain.autoMove(0,0,-60);
                 break;
-            case 10:
-                drivetrain.autoSpeed(.5,.45);
-                drivetrain.autoMove(500, -350,0);
+            case 9:
+                drivetrain.autoSpeed(.6,.45);
+                drivetrain.autoMove(400, -405,0);
                 break;
-            case 11:
-                drivetrain.autoMove(50,675,27);
+            case 10:
+                drivetrain.autoMove(-120,800,27);
                 intake.deposit(CLOSE_CLAW_DUCK);
                 intake.setPower(0);
                 lift_id = 0;
                 break;
-            case 12:
+            case 11:
                 switch (lift_id){
                     case 0:
-                        lift.raise(PITSTOP);
+                        lift.raise(60000);
                         if (lift.liftReached()) lift_id = 1;
                         break;
                     case 1:
                         lift.rotate(54);
-                        if (lift.pivotReached()) lift_id += 1;
-                        break;
-                    case 2:
-                        lift.raise(60000);
-                        if (lift.liftReached()) {
+                        if (lift.pivotReached()) {
+//                        break;
+//                    case 2:
+//
+//                        if (lift.liftReached()) {
                             lift_timer.reset();
                             intake.deposit(OPEN_CLAW);
-                            lift_id += 1;
+                            lift_id += 2;
                         }
                         break;
                     case 3:
-                        if (lift_timer.seconds() > HOLD_TIME) lift_id += 1;
+                        if (lift_timer.seconds() > HOLD_TIME + 0.5) lift_id += 1;
                         break;
                     case 4:
                         lift.raise(PITSTOP);
@@ -252,17 +252,15 @@ public class BlueAuto extends LoggingOpMode{
                         break;
                 }
                 break;
-            case 13:
-                drivetrain.autoMove(-700, -450, 0);
+            case 12:
+                drivetrain.autoMove(-1150, 0, -13);
                 break;
-            case 14:
-                drivetrain.autoMove(-570, 600, -20);
         }
 
         lift.update();
         drivetrain.update(telemetry);
 
-        if (drivetrain.ifReached() && main_id != 2 && main_id != 12 || if_spinned()) {
+        if (drivetrain.ifReached() && main_id != 2 && main_id != 11 || if_spinned()) {
             main_id += 1;
         }
 
